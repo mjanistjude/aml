@@ -44,10 +44,9 @@ fi
 agfusion(){
  outdir=$1
  name=$2
- source activate agfusion
- cmd="python driver_post_annotate.py ${outdir}/${name}_annotated.group.tsv ${outdir} ${name} $3 $4"
+ cmd="bash run_agfusion.sh ${outdir}/${name}_annotated.group.tsv ${outdir} ${name} $3 $4"
  echo $cmd
- bsub -M 90000 -J ${name}_gen -eo logs/${name}.sag.err -oo logs/${name}.sag.out "$cmd"
+ bsub -M 90000 -J ${name}_gen -w "done(${name}_iann)" -eo logs/${name}.sag.err -oo logs/${name}.sag.out "$cmd"
 }
 
 for d in ${basedir}SV_output/*.sv.vcf; do
