@@ -24,3 +24,12 @@ print ("writing to file")
 df["mittleman"] = df.apply(lambda x: "Y" if pd.notna(x["Gene_St"]) and pd.notna(x["Gene_End"]) and (str(x["Gene_St"]) + "::" + str(x["Gene_End"]) in mdf) else "-",axis=1)
 df.to_csv(outdir+"/"+name+"_annotated.sag.tsv",sep="\t",index=False)
 
+df=df[["#CHROM","POS","endchr","endpos","SV_length","BAR","splitAsplitB","Gene_St","site1","Gene_End","site2","Fusion_effect","coverage_bp1","coverage_bp2","ratioA","ratioB","mittleman","GroupID"]]
+df.columns=["chrA","posA","chrB","posB","size","BAR","sf","GeneA","exon/intronA","GeneB","exon/intronB","Frame","Total Reads A","Total Reads B","RatioA","RatioB","Tags","GroupID"]
+
+df[["sfa", "sfb"]] = df["sf"].str.split(",",expand=True)
+df["Tags"] = df["Tags"].replace("Y", "Mitelman")
+df.drop(columns=["sf"], inplace=True)
+
+df.to_csv(outdir+"/"+name+"_aperture_review.tsv",sep="\t",index=False)
+
